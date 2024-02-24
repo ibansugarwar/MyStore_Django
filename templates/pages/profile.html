@@ -1,0 +1,89 @@
+{% extends 'customer_base.html' %}
+
+{% block main %}
+
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>アカウント情報</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group ">
+                    <label>名前</label>
+                    <input class="form-control" type="text" name="name" placeholder="name"
+                        value="{{user.profile.name}}">
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group col-md-2">
+                        <label>郵便番号</label>
+                        <input class="form-control" type="text" name="zipcode" placeholder="zipcode"
+                            value="{{user.profile.zipcode}}">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>都道府県</label>
+                        <input class="form-control" type="text" name="prefecture" placeholder="prefecture"
+                            value="{{user.profile.prefecture}}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>市区町村</label>
+                        <input class="form-control" type="text" name="city" placeholder="city"
+                            value="{{user.profile.city}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>住所１</label>
+                    <input class="form-control" type="text" name="address1" placeholder="address1"
+                        value="{{user.profile.address1}}">
+                </div>
+                <div class="form-group">
+                    <label>住所２</label>
+                    <input class="form-control" type="text" name="address2" placeholder="address2"
+                        value="{{user.profile.address2}}">
+                </div>
+                <div class="form-group">
+                    <label>電話番号</label>
+                    <input class="form-control" type="tel" name="tel" placeholder="tel" value="{{user.profile.tel}}">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-bottom: 30px;">Save</button>
+            </form>
+            <!-- ここにGoogle Mapを表示する -->
+            <div id="map" class="map" style="width: 600px; height: 600px;" />
+        </div>
+    </div>
+</div>
+
+
+<!-- APIキーを指定してjsファイルを読み込む -->
+<script async src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_GEOCODING_API_KEY}}&callback=initMap"></script>
+<script type="text/javascript">
+// Google Mapを表示する関数
+function initMap() {
+  const geocoder = new google.maps.Geocoder();
+  // ここでaddressのvalueに住所のテキストを指定する
+  geocoder.geocode( { address: '{{user.profile.prefecture}}{{user.profile.city}}{{user.profile.address1}}{{user.profile.address2}}'}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      const latlng = {
+        lat: results[0].geometry.location.lat(),
+        lng: results[0].geometry.location.lng()
+      }
+      const opts = {
+        zoom: 15,
+        center: new google.maps.LatLng(latlng)
+      }
+      const map = new google.maps.Map(document.getElementById('map'), opts)
+      new google.maps.Marker({
+        position: latlng,
+        map: map 
+      })
+    } else {
+      console.error('Geocode was not successful for the following reason: ' + status)
+    }
+  })
+}
+</script>
+
+
+{% endblock %}

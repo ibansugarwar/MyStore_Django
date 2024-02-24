@@ -1,0 +1,31 @@
+<form action="/search" method="GET" class="">
+    <div class="position-relative overflow-hidden p-3 p-md-3 ">
+
+        <!-- 検索ボックス -->
+        <div class="input-group-btn " style="Float: left; width: 95%;">
+            {% if searched_flg %}
+            <input type="text" class="form-control input-sm glyphicon-search" name="search_keyword" value={{search_keyword}}>
+            {% else %}
+            <input type="text" class="form-control input-sm glyphicon-search" name="search_keyword" placeholder="キーワード検索">
+            {% endif %}
+        </div>
+        
+        <!-- 検索ボタン -->
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+        </div>
+        
+        {% if searched_flg == False %}
+        <!-- キーワードを空で検索した場合 -->
+        <div class="input-group-btn ">
+            <p style="color:red;">検索キーワードが空欄です。キーワードを入力して検索してください。</p>
+        </div>
+
+        {% elif searched_flg == True %}
+        <!-- 検索結果件数 -->
+        <div class="input-group-btn">
+                <p>検索結果：{{object_count}}件</p>
+        </div>
+        {% endif %}
+    </div>
+</form>

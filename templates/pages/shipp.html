@@ -1,0 +1,67 @@
+{% extends 'operation_base.html' %}
+{% load humanize %}
+{% block main %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>発送管理</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">注文番号</th>
+                        <th scope="col">注文日付</th>
+                        <th scope="col">uid</th>
+                        <th scope="col">ステータス</th>
+                        <th scope="col">発送</th>
+                        <th scope="col">取消</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list %}
+                    <tr>
+                        <td><a href="/orders/{{object.pk}}/">{{object.pk}}</a></td>
+                        <td>{{object.created_at|date:"Y-m-d f"}}</td>
+                        <td>{{object.uid}}</td>
+                        {% if object.canceled_at %}
+                        <td>キャンセル</td>
+                        {% elif object.shipped_at == None %}
+                        <td>未発送</td>
+                        {% elif object.shipped_at %}
+                        <td>完了：{{object.shipped_at|date:"Y-m-d f"}}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+
+                        {% if object.shipped_at == None and object.canceled_at == None %}
+                        <td>
+                            <form action="/shipp_complete/" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_pk" value="{{object.pk}}">
+                                <button class="btn btn-success">発送完了</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/shipp_cancel/" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_pk" value="{{object.pk}}">
+                                <button class="btn btn-danger">取消</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td></td>
+                        <td></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

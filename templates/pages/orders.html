@@ -1,0 +1,60 @@
+{% extends 'customer_base.html' %}
+{% load humanize %}
+{% block main %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>注文一覧</h1>
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">注文番号</th>
+                        <th scope="col">注文日付</th>
+                        <th scope="col">金額</th>
+                        <th scope="col">ステータス</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list %}
+                    <tr>
+                        <td><a href="/orders/{{object.pk}}/">{{object.pk}}</a></td>
+                        <td>{{object.created_at|date:"Y-m-d f"}}</td>
+                        <td>¥{{object.tax_included| intcomma}}</td>
+
+                        {% if object.canceled_at %}
+                        <td>キャンセル</td>
+                        {% elif object.shipped_at == None %}
+                        <td>発送待ち</td>
+                        {% elif object.shipped_at %}
+                        <td>発送完了</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+
+                        {% if object.shipped_at == None and object.canceled_at == None %}
+                        <td>
+                            <form action="/order_cancel/" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_pk" value="{{object.pk}}">
+                                <button class="btn btn-danger">注文取消</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

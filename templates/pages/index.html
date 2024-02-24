@@ -1,0 +1,61 @@
+{% extends 'customer_base.html' %}
+
+{% load humanize %}
+
+{% block main %}
+
+{% include 'snippets/headline.html' %}
+
+{% if searched_flg != True %}
+<div class="position-relative overflow-hidden p-3 p-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-0 mx-auto my-2">
+        <img src="/static/pop_okaidoku_day.png" alt="おすすめバナー">
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+{% endif %}
+
+<div class="row">
+
+    {% include 'snippets/side_menu.html' %}
+
+    <div name="item_list" class="col-md-8">
+
+       
+
+        {% if searched_flg != True %}
+        <p class="h3" style="margin: 0; color: red;">人気商品</p>
+        <div class="row border">
+            
+            {% for object in POPULAR_ITEMS %}
+            {% if forloop.counter <= 6 %}
+            <div class="col-12 col-lg-2 my-3">
+                {% include 'snippets/item_box.html' %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+
+        <div class="row my-5">
+            {% if object_list %}
+            
+            {% for object in object_list %}
+            <div class="col-12 col-lg-2 my-3">
+                {% include 'snippets/item_box.html' %}
+            </div>
+            {% endfor %}
+            
+            {% else %}
+            <p>検索キーワード "{{search_keyword}}" に一致する商品はありませんでした</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock %}

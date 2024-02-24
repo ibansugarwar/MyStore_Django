@@ -1,0 +1,34 @@
+{% extends 'customer_base.html' %}
+
+{% block main %}
+
+{% include 'snippets/headline.html' %}
+<div class="row">
+
+    <div class="col-12 my-3">
+        <h1 class="col-md-2 offset-md-3">{{ category_name }}</h1>
+    </div>
+
+    {% include 'snippets/side_menu.html' %}
+    
+    <div name="item_list" class="col-md-8">
+
+
+        <div class="row">
+
+            {% for object in object_list %}
+            <div class="col-12 col-lg-2 my-3">
+                {% include 'snippets/item_box.html' %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row m-5">
+            <div class="col-12 my-3">
+                {% include 'snippets/pagination.html' %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

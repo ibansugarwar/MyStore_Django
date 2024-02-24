@@ -1,0 +1,37 @@
+{% load humanize %}
+
+
+<a href="/items/{{object.pk}}/">
+  <div name="item_box">
+    <img src="/{{object.image}}" class="bg-white" height="160px" style="width:100%;" />
+    <div class="text-center text-secondary overflow-hidden">
+      <div class="my-2 py-2">
+
+        <!-- 商品名 -->
+        <p name="item_name" class="lead three_point_leader" style="font-size: 14px;margin: 0;text-align: left;">{{object.name}}</p>
+
+        <!-- 金額 -->
+        <p name="item_price" class="lead three_point_leader" style="font-size: 20px;margin: 0;text-align: right;font-weight: bolder;color: red;">¥{{object.price| intcomma}}</p>
+
+        <form action="/cart/add/" method="POST" class="p-2">
+          {% csrf_token %}
+          <input type="hidden" name="item_pk" value="{{object.pk}}" />
+          <div class="form-row align-items-center">
+            
+            <div class="col-md-7">
+              <input type="number" class="form-control form-control-sm" name="quantity" value="1" max="{{object.stock}}" />
+            </div>
+
+            <div class="col-md-5">
+              {% if object.stock == 0 %}
+              <button type="submit" class="btn btn-sm btn-outline-warning" disabled>売り切れ</button>
+              {% else %}
+              <button type="submit" class="btn btn-sm btn-success">追加</button>
+              {% endif %}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</a>
